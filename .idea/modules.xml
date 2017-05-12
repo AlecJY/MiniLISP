@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MiniLISP.iml" filepath="$PROJECT_DIR$/.idea/modules/MiniLISP.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MiniLISP_main.iml" filepath="$PROJECT_DIR$/.idea/modules/MiniLISP_main.iml" group="MiniLISP" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MiniLISP_test.iml" filepath="$PROJECT_DIR$/.idea/modules/MiniLISP_test.iml" group="MiniLISP" />
+    </modules>
+  </component>
+</project>
