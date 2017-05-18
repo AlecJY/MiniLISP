@@ -40,13 +40,9 @@ NUMBER      : '0'
 
 ID          : LETTER (LETTER | DIGIT | '-')*;
 
-BOOL        : TRUE
-            | FALSE
-            ;
-
 TRUE        : '#t';
 FALSE       : '#f';
 
-SEPARATOR   : [ \t\n\r] -> skip;
+SEPARATOR   : [ \t\n\r] -> channel(HIDDEN);
 LETTER      : [a-z];
 DIGIT       : [0-9];

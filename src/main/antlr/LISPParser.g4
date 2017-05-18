@@ -15,40 +15,44 @@ stat    : exprs
         | def
         ;
 
-exprs   : LPARAM expr RPARAM
-        | NUMBER
-        | BOOL
-        | ID
+exprs   : LPARAM expr RPARAM #BasicExprs
+        | NUMBER #NumExprs
+        | bool #BoolExprs
+        | ID #VarExprs
         ;
 
-expr    : uArgNumOp exprs exprs+
-        | twoArgNumOp exprs exprs
-        | uArgLogOp exprs exprs+
-        | oneArgLogOp exprs
-        | PRINTNUM exprs
-        | PRINTBOOL exprs
-        | FUNC LPARAM ID* RPARAM def* exprs
-        | LPARAM FUNC LPARAM ID* RPARAM exprs RPARAM exprs*
-        | ID exprs*
-        | IF exprs exprs exprs
+expr    : uArgNumOp exprs exprs+ #UOpExpr
+        | twoArgNumOp exprs exprs #TwoOpExpr
+        | uArgLogOp exprs exprs+ #ULogExpr
+        | oneArgLogOp exprs #OneLogExpr
+        | PRINTNUM exprs #PNumExpr
+        | PRINTBOOL exprs #PBExpr
+        | FUNC LPARAM ID* RPARAM def* exprs #FuncExpr
+        | LPARAM FUNC LPARAM ID* RPARAM exprs RPARAM exprs* #FuncExpr
+        | ID exprs* #FuncCallExpr
+        | IF exprs exprs exprs #IfExpr
         ;
 
 def     : LPARAM DEFINE ID exprs RPARAM;
 
-uArgNumOp   : PLUS
-            | MULTIPLY
-            | EQUAL
+uArgNumOp   : op=PLUS
+            | op=MULTIPLY
+            | op=EQUAL
             ;
 
-twoArgNumOp : MINUS
-            | DIVIDE
-            | MODULUS
-            | GREATER
-            | SMALLER
+twoArgNumOp : op=MINUS
+            | op=DIVIDE
+            | op=MODULUS
+            | op=GREATER
+            | op=SMALLER
             ;
 
-uArgLogOp   : AND
-            | OR
+uArgLogOp   : op=AND
+            | op=OR
             ;
 
 oneArgLogOp : NOT;
+
+bool    : op=TRUE
+        | op=FALSE
+        ;

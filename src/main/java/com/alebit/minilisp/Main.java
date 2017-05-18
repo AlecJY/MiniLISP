@@ -16,9 +16,9 @@ public class Main {
             LISPLexer lexer = new LISPLexer(CharStreams.fromFileName(args[0]));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             LISPParser parser = new LISPParser(tokens);
-            ParseTree parseTree = parser.prog();
-            ParseTreeWalker walker = new ParseTreeWalker();
-            walker.walk(new LISPWalker(), parseTree);
+            ParseTree tree = parser.prog();
+            LISPVisitor visitor = new LISPVisitor();
+            visitor.visit(tree);
 
         } catch (IOException e) {
 
