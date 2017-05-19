@@ -3,6 +3,7 @@ package com.alebit.minilisp.object;
 import com.alebit.minilisp.LISPVisitor;
 import com.alebit.minilisp.Scope;
 import com.alebit.minilisp.exceptions.FunctionArgumentsNotMatchException;
+import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 public class Function {
@@ -16,10 +17,10 @@ public class Function {
         this.parentScope = parentScope;
     }
 
-    public LISPObject invoke(LISPObject[] args) {
+    public LISPObject invoke(LISPObject[] args, Token dbgToken) {
         Scope scope = new Scope(parentScope);
         if (args.length != argsName.length) {
-            throw new FunctionArgumentsNotMatchException();
+            throw new FunctionArgumentsNotMatchException(argsName.length, args.length, dbgToken);
         }
         for (int i = 0; i < args.length; i++) {
             scope.addVar(argsName[i], args[i]);
