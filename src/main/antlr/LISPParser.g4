@@ -28,7 +28,7 @@ expr    : uArgNumOp exprs exprs+ #UOpExpr
         | PRINTNUM exprs #PNumExpr
         | PRINTBOOL exprs #PBExpr
         | FUNC LPARAM ID* RPARAM def* exprs #FuncExpr
-        | LPARAM FUNC LPARAM ID* RPARAM exprs RPARAM exprs* #FuncExpr
+        | LPARAM FUNC LPARAM ID* RPARAM def* exprs RPARAM exprs* #FuncWFuncCallExpr
         | ID exprs* #FuncCallExpr
         | IF exprs exprs exprs #IfExpr
         ;

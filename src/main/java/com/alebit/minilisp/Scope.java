@@ -6,24 +6,29 @@ import com.alebit.minilisp.object.LISPObject;
 
 import java.util.HashMap;
 
-class Scope {
+public class Scope {
     private Scope parent;
     private HashMap<String, LISPObject> variables = new HashMap<>();
 
-    Scope(Scope parent) {
+    public Scope(Scope parent) {
         this.parent = parent;
     }
 
-    void addVar(String name, LISPObject value) {
+    public void addVar(String name, LISPObject value) {
         if (variables.containsKey(name)) {
             variables.replace(name, value);
+        } else {
+            variables.put(name, value);
         }
-        variables.put(name, value);
     }
 
-    LISPObject getVar(String name) {
+    public LISPObject getVar(String name) {
         if (!variables.containsKey(name)) {
-            throw new VariableNotFoundException();
+            if (parent != null) {
+                return parent.getVar(name);
+            } else {
+                throw new VariableNotFoundException();
+            }
         }
         return variables.get(name);
     }

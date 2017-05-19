@@ -2,6 +2,7 @@ package com.alebit.minilisp;
 
 import com.alebit.minilisp.LISPLexer;
 import com.alebit.minilisp.exceptions.UnexpectedTypeException;
+import com.alebit.minilisp.object.Function;
 import com.alebit.minilisp.object.LISPObject;
 import com.alebit.minilisp.LISPParser;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -11,6 +12,14 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class LISPVisitor extends com.alebit.minilisp.LISPParserBaseVisitor<LISPObject> {
     private Scope scope = new Scope(null);
+
+    public LISPVisitor() {
+
+    }
+
+    public LISPVisitor(Scope scope) {
+        this.scope = scope;
+    }
 
     @Override
     public LISPObject visitBasicExprs(LISPParser.BasicExprsContext ctx) {
@@ -198,19 +207,6 @@ public class LISPVisitor extends com.alebit.minilisp.LISPParserBaseVisitor<LISPO
     }
 
     @Override
-    public LISPObject visitIfExpr(LISPParser.IfExprContext ctx) {
-        LISPObject ifResult = visit(ctx.exprs(0));
-        if (ifResult.getObjectType() != Boolean.class) {
-            throw new UnexpectedTypeException(ctx, "Unexpected type " + ifResult.getObjectType().getName() + ". Expect Boolean");
-        }
-        if ((boolean) ifResult.getValue()) {
-            return visit(ctx.exprs(1));
-        } else {
-            return visit(ctx.exprs(2));
-        }
-    }
-
-    @Override
     public LISPObject visitPNumExpr(LISPParser.PNumExprContext ctx) {
         LISPObject object = visit(ctx.exprs());
         if (object.getObjectType() != Integer.class) {
@@ -232,6 +228,62 @@ public class LISPVisitor extends com.alebit.minilisp.LISPParserBaseVisitor<LISPO
             System.out.println(LISPLexer.VOCABULARY.getDisplayName(LISPLexer.FALSE));
         }
         return new LISPObject();
+    }
+
+    @Override
+    public LISPObject visitFuncExpr(LISPParser.FuncExprContext ctx) {
+        String[] argsName = new String[ctx.ID().size()];
+        for (int i = 0; i < ctx.ID().size(); i++) {
+            argsName[i] = ctx.ID(i).getSymbol().getText();
+        }
+        for (LISPParser.DefContext context: ctx.def()) {
+            visit(context);
+        }
+        Function function = new Function(ctx.exprs(), argsName, scope);
+        return new LISPObject(function);
+    }
+
+    @Override
+    public LISPObject visitFuncWFuncCallExpr(LISPParser.FuncWFuncCallExprContext ctx) {
+        String[] argsName = new String[ctx.ID().size()];
+        for (int i = 0; i < ctx.ID().size(); i++) {
+            argsName[i] = ctx.ID(i).getSymbol().getText();
+        }
+        for (LISPParser.DefContext context: ctx.def()) {
+            visit(context);
+        }
+        Function function = new Function(ctx.exprs(0), argsName, scope);
+        LISPObject[] args = new LISPObject[ctx.exprs().size()-1];
+        for (int i = 1; i < ctx.exprs().size(); i++) {
+            args[i-1] = visit(ctx.exprs(i));
+        }
+        return function.invoke(args);
+    }
+
+    @Override
+    public LISPObject visitFuncCallExpr(LISPParser.FuncCallExprContext ctx) {
+        LISPObject function = scope.getVar(ctx.ID().getSymbol().getText());
+        if (function.getObjectType() != Function.class) {
+            throw new UnexpectedTypeException(ctx, "Unexpected type " + function.getObjectType().getName() + ". Expect Function" );
+        }
+        LISPObject[] args = new LISPObject[ctx.exprs().size()];
+        for (int i = 0; i < ctx.exprs().size(); i++) {
+            args[i] = visit(ctx.exprs(i));
+        }
+        return ((Function) function.getValue()).invoke(args);
+    }
+
+    @Override
+    public LISPObject visitIfExpr(LISPParser.IfExprContext ctx) {
+        LISPObject ifResult = visit(ctx.exprs(0));
+        if (ifResult.getObjectType() != Boolean.class) {
+            throw new UnexpectedTypeException(ctx, "Unexpected type " + ifResult.getObjectType().getName() + ". Expect Boolean");
+        }
+        if ((boolean) ifResult.getValue()) {
+            return visit(ctx.exprs(1));
+        } else {
+            return visit(ctx.exprs(2));
+        }
     }
 
     @Override
