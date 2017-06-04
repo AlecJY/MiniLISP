@@ -19,6 +19,7 @@ public class Main {
             LISPLexer lexer = new LISPLexer(CharStreams.fromFileName(args[0]));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             LISPParser parser = new LISPParser(tokens);
+            parser.addErrorListener(new LISPErrorListener());
             ParseTree tree = parser.prog();
             LISPVisitor visitor = new LISPVisitor();
             visitor.visit(tree);
