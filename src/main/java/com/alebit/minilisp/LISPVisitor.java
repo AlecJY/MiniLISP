@@ -67,6 +67,9 @@ public class LISPVisitor extends com.alebit.minilisp.LISPParserBaseVisitor<LISPO
                 int product = 1;
                 for (LISPParser.ExprsContext context: ctx.exprs()) {
                     LISPObject contextValue = visit(context);
+                    if (contextValue == null) {
+                        System.exit(1);
+                    }
                     if (contextValue.getObjectType() != Integer.class) {
                         throw new UnexpectedTypeException(Integer.class, contextValue.getObjectType(), context.getStart());
                     }
@@ -79,6 +82,9 @@ public class LISPVisitor extends com.alebit.minilisp.LISPParserBaseVisitor<LISPO
                 Integer lastValue = null;
                 for (LISPParser.ExprsContext context: ctx.exprs()) {
                     LISPObject contextValue = visit(context);
+                    if (contextValue == null) {
+                        System.exit(1);
+                    }
                     if (contextValue.getObjectType() != Integer.class) {
                         throw new UnexpectedTypeException(Integer.class, contextValue.getObjectType(), context.getStart());
                     }
@@ -119,6 +125,9 @@ public class LISPVisitor extends com.alebit.minilisp.LISPParserBaseVisitor<LISPO
             case LISPLexer.DIVIDE:
                 val1 = visit(ctx.exprs(0));
                 val2 = visit(ctx.exprs(1));
+                if (val1 == null || val2 == null) {
+                    System.exit(1);
+                }
                 if (val1.getObjectType() != Integer.class) {
                     throw new UnexpectedTypeException(Integer.class, val1.getObjectType(), ctx.exprs(0).getStart());
                 }
@@ -130,6 +139,9 @@ public class LISPVisitor extends com.alebit.minilisp.LISPParserBaseVisitor<LISPO
             case LISPLexer.MODULUS:
                 val1 = visit(ctx.exprs(0));
                 val2 = visit(ctx.exprs(1));
+                if (val1 == null || val2 == null) {
+                    System.exit(1);
+                }
                 if (val1.getObjectType() != Integer.class) {
                     throw new UnexpectedTypeException(Integer.class, val1.getObjectType(), ctx.exprs(0).getStart());
                 }
@@ -141,6 +153,9 @@ public class LISPVisitor extends com.alebit.minilisp.LISPParserBaseVisitor<LISPO
             case LISPLexer.GREATER:
                 val1 = visit(ctx.exprs(0));
                 val2 = visit(ctx.exprs(1));
+                if (val1 == null || val2 == null) {
+                    System.exit(1);
+                }
                 if (val1.getObjectType() != Integer.class) {
                     throw new UnexpectedTypeException(Integer.class, val1.getObjectType(), ctx.exprs(0).getStart());
                 }
@@ -152,6 +167,9 @@ public class LISPVisitor extends com.alebit.minilisp.LISPParserBaseVisitor<LISPO
             case LISPLexer.SMALLER:
                 val1 = visit(ctx.exprs(0));
                 val2 = visit(ctx.exprs(1));
+                if (val1 == null || val2 == null) {
+                    System.exit(1);
+                }
                 if (val1.getObjectType() != Integer.class) {
                     throw new UnexpectedTypeException(Integer.class, val1.getObjectType(), ctx.exprs(0).getStart());
                 }
@@ -187,6 +205,9 @@ public class LISPVisitor extends com.alebit.minilisp.LISPParserBaseVisitor<LISPO
                 result = false;
                 for (LISPParser.ExprsContext context: ctx.exprs()) {
                     LISPObject contextValue = visit(context);
+                    if (contextValue == null) {
+                        System.exit(1);
+                    }
                     if (contextValue.getObjectType() != Boolean.class) {
                         throw new UnexpectedTypeException(Boolean.class, contextValue.getObjectType(), context.getStart());
                     }
@@ -274,6 +295,9 @@ public class LISPVisitor extends com.alebit.minilisp.LISPParserBaseVisitor<LISPO
         LISPObject[] args = new LISPObject[ctx.exprs().size()-1];
         for (int i = 1; i < ctx.exprs().size(); i++) {
             args[i-1] = visit(ctx.exprs(i));
+            if (args[i-1] == null) {
+                System.exit(1);
+            }
         }
         return function.invoke(args, ctx.exprs(1).getStart());
     }
@@ -287,6 +311,9 @@ public class LISPVisitor extends com.alebit.minilisp.LISPParserBaseVisitor<LISPO
         LISPObject[] args = new LISPObject[ctx.exprs().size()];
         for (int i = 0; i < ctx.exprs().size(); i++) {
             args[i] = visit(ctx.exprs(i));
+            if (args[i] == null) {
+                System.exit(1);
+            }
         }
         return ((Function) function.getValue()).invoke(args, ctx.exprs(0).getStart());
     }
@@ -309,7 +336,11 @@ public class LISPVisitor extends com.alebit.minilisp.LISPParserBaseVisitor<LISPO
 
     @Override
     public LISPObject visitDef(LISPParser.DefContext ctx) {
-        scope.addVar(ctx.ID().getSymbol().getText(), visit(ctx.exprs()));
+        LISPObject value = visit(ctx.exprs());
+        if (value == null) {
+            System.exit(1);
+        }
+        scope.addVar(ctx.ID().getSymbol().getText(), value);
         return new LISPObject();
     }
 }
