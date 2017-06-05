@@ -32,4 +32,12 @@ public class Scope {
         }
         return variables.get(name);
     }
+
+    public Scope clone() {
+        Scope scope = new Scope(parent);
+        for (String key: variables.keySet()) {
+            scope.addVar(key, variables.get(key));
+        }
+        return scope;
+    }
 }

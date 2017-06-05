@@ -18,7 +18,7 @@ public class Function {
     }
 
     public LISPObject invoke(LISPObject[] args, Token dbgToken) {
-        Scope scope = new Scope(parentScope);
+        Scope scope = parentScope.clone();
         if (args.length != argsName.length) {
             throw new FunctionArgumentsNotMatchException(argsName.length, args.length, dbgToken);
         }

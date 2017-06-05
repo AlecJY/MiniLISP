@@ -237,10 +237,12 @@ public class LISPVisitor extends com.alebit.minilisp.LISPParserBaseVisitor<LISPO
         for (int i = 0; i < ctx.ID().size(); i++) {
             argsName[i] = ctx.ID(i).getSymbol().getText();
         }
+        Scope defScope = new Scope(scope);
+        LISPVisitor visitor = new LISPVisitor(defScope);
         for (LISPParser.DefContext context: ctx.def()) {
-            visit(context);
+            visitor.visit(context);
         }
-        Function function = new Function(ctx.exprs(), argsName, scope);
+        Function function = new Function(ctx.exprs(), argsName, defScope);
         return new LISPObject(function);
     }
 
@@ -250,10 +252,12 @@ public class LISPVisitor extends com.alebit.minilisp.LISPParserBaseVisitor<LISPO
         for (int i = 0; i < ctx.ID().size(); i++) {
             argsName[i] = ctx.ID(i).getSymbol().getText();
         }
+        Scope defScope = new Scope(scope);
+        LISPVisitor visitor = new LISPVisitor(defScope);
         for (LISPParser.DefContext context: ctx.def()) {
-            visit(context);
+            visitor.visit(context);
         }
-        Function function = new Function(ctx.exprs(0), argsName, scope);
+        Function function = new Function(ctx.exprs(0), argsName, defScope);
         LISPObject[] args = new LISPObject[ctx.exprs().size()-1];
         for (int i = 1; i < ctx.exprs().size(); i++) {
             args[i-1] = visit(ctx.exprs(i));
