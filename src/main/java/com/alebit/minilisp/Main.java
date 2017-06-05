@@ -23,10 +23,10 @@ public class Main {
             ParseTree tree = parser.prog();
             LISPVisitor visitor = new LISPVisitor();
             visitor.visit(tree);
-
         } catch (IOException e) {
             System.err.println("File not found: " + args[0]);
             System.exit(1);
         }
+        System.out.println();
     }
 }
