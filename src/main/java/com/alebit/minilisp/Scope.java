@@ -35,9 +35,7 @@ public class Scope {
 
     public Scope clone() {
         Scope scope = new Scope(parent);
-        for (String key: variables.keySet()) {
-            scope.addVar(key, variables.get(key));
-        }
+        scope.variables = new HashMap<>(variables);
         return scope;
     }
 }

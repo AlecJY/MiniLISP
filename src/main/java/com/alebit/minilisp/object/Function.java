@@ -9,16 +9,16 @@ import org.antlr.v4.runtime.tree.ParseTree;
 public class Function {
     private ParseTree ctx;
     private String[] argsName;
-    private Scope parentScope;
+    private Scope defScope;
 
-    public Function(ParseTree ctx, String[] argsName, Scope parentScope) {
+    public Function(ParseTree ctx, String[] argsName, Scope defScope) {
         this.ctx = ctx;
         this.argsName = argsName;
-        this.parentScope = parentScope;
+        this.defScope = defScope;
     }
 
     public LISPObject invoke(LISPObject[] args, Token dbgToken) {
-        Scope scope = parentScope.clone();
+        Scope scope = defScope.clone();
         if (args.length != argsName.length) {
             throw new FunctionArgumentsNotMatchException(argsName.length, args.length, dbgToken);
         }
