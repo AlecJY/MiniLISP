@@ -224,9 +224,9 @@ public class LISPVisitor extends com.alebit.minilisp.LISPParserBaseVisitor<LISPO
             throw new UnexpectedTypeException(Boolean.class, object.getObjectType(), ctx.exprs().getStart());
         }
         if ((boolean) object.getValue()) {
-            System.out.println(LISPLexer.VOCABULARY.getDisplayName(LISPLexer.TRUE));
+            System.out.println("#t");
         } else {
-            System.out.println(LISPLexer.VOCABULARY.getDisplayName(LISPLexer.FALSE));
+            System.out.println("#f");
         }
         return new LISPObject();
     }

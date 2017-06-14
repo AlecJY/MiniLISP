@@ -7,7 +7,8 @@ import org.antlr.v4.runtime.Recognizer;
 public class LISPErrorListener extends BaseErrorListener {
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
-        super.syntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e);
+        // super.syntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e);
+        System.out.println("error");
         System.exit(1);
     }
 }

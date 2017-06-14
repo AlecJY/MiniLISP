@@ -13,7 +13,8 @@ public class UnexpectedTypeException extends RuntimeException {
         if (found == Integer.class) {
             foundName = "Number";
         }
-        System.err.println("line " + token.getLine() + ":" + token.getCharPositionInLine() + " unexpected type '" + foundName + "' expecting '" + needName + "'");
+        // System.err.println("line " + token.getLine() + ":" + token.getCharPositionInLine() + " unexpected type '" + foundName + "' expecting '" + needName + "'");
+        System.out.println("error");
         System.exit(1);
     }
 }
